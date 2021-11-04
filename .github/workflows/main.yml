@@ -32,13 +32,28 @@ jobs:
     - run: ruby -v
     - run: ruby -e "puts 'Hello World!'"
 
-    - name: Run the default task (JRuby)
-      if: ${{ startsWith(matrix.ruby, 'jruby') }}
-      run: jruby -G rake
-
-    - name: Run the default task
-      if: ${{ !startsWith(matrix.ruby, 'jruby') }}
-      run: bundle exec rake
+    - run: ruby test/amqp/client_test.rb --verbose
+      continue-on-error: true
       env:
-        TESTOPTS: --exclude=/_tls$/ --verbose
+        AMQP_PORT: ${{ job.services.rabbitmq.ports[5672] }}
+    - run: ruby test/amqp/high_level_test.rb --verbose
+      continue-on-error: true
+      env:
+        AMQP_PORT: ${{ job.services.rabbitmq.ports[5672] }}
+    - run: ruby test/amqp/properties_test.rb --verbose
+      continue-on-error: true
+      env:
+        AMQP_PORT: ${{ job.services.rabbitmq.ports[5672] }}
+
+    - run: bundle exec ruby test/amqp/client_test.rb --verbose
+      continue-on-error: true
+      env:
+        AMQP_PORT: ${{ job.services.rabbitmq.ports[5672] }}
+    - run: bundle exec ruby test/amqp/high_level_test.rb --verbose
+      continue-on-error: true
+      env:
+        AMQP_PORT: ${{ job.services.rabbitmq.ports[5672] }}
+    - run: bundle exec ruby test/amqp/properties_test.rb --verbose
+      continue-on-error: true
+      env:
         AMQP_PORT: ${{ job.services.rabbitmq.ports[5672] }}
