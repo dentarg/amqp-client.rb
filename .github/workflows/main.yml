@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: ['2.6', '2.7', '3.0', 'jruby', 'truffleruby']
+        ruby: ['3.0', 'jruby', 'truffleruby']
     steps:
     - uses: actions/checkout@v2
     - name: Set up Ruby
@@ -28,7 +28,13 @@ jobs:
       with:
         bundler-cache: true
         ruby-version: ${{ matrix.ruby }}
+
+    - name: Run the default task (JRuby)
+      if: startsWith(matrix.ruby, 'jruby')
+      run: jruby -G rake
+
     - name: Run the default task
+      if: !startsWith(matrix.ruby, 'jruby')
       run: bundle exec rake
       env:
         TESTOPTS: --exclude=/_tls$/
