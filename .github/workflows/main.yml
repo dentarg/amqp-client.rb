@@ -40,5 +40,5 @@ jobs:
       if: ${{ !startsWith(matrix.ruby, 'jruby') }}
       run: bundle exec rake
       env:
-        TESTOPTS: --exclude=/_tls$/
+        TESTOPTS: --exclude=/_tls$/ --verbose
         AMQP_PORT: ${{ job.services.rabbitmq.ports[5672] }}
