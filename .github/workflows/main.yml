@@ -32,13 +32,13 @@ jobs:
     - run: ruby -v
     - run: ruby -e "puts 'Hello World!"
 
-    # - name: Run the default task (JRuby)
-    #   if: startsWith(matrix.ruby, 'jruby')
-    #   run: jruby -G rake
+    - name: Run the default task (JRuby)
+      if: ${{ startsWith(matrix.ruby, 'jruby') }}
+      run: jruby -G rake
 
-    # - name: Run the default task
-    #   if: !startsWith(matrix.ruby, 'jruby')
-    #   run: bundle exec rake
-    #   env:
-    #     TESTOPTS: --exclude=/_tls$/
-    #     AMQP_PORT: ${{ job.services.rabbitmq.ports[5672] }}
+    - name: Run the default task
+      if: ${{ !startsWith(matrix.ruby, 'jruby') }}
+      run: bundle exec rake
+      env:
+        TESTOPTS: --exclude=/_tls$/
+        AMQP_PORT: ${{ job.services.rabbitmq.ports[5672] }}
