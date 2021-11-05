@@ -35,27 +35,33 @@ jobs:
       continue-on-error: true
       env:
         AMQP_PORT: ${{ job.services.rabbitmq.ports[5672] }}
+        JAVA_OPTS: "-Djava.net.preferIPv4Stack=true"
     - run: ruby test/amqp/high_level_test.rb --verbose
       continue-on-error: true
       env:
         AMQP_PORT: ${{ job.services.rabbitmq.ports[5672] }}
+        JAVA_OPTS: "-Djava.net.preferIPv4Stack=true"
     - run: ruby test/amqp/properties_test.rb --verbose
       continue-on-error: true
       env:
         AMQP_PORT: ${{ job.services.rabbitmq.ports[5672] }}
+        JAVA_OPTS: "-Djava.net.preferIPv4Stack=true"
 
     - run: bundle exec ruby test/amqp/client_test.rb --verbose
       continue-on-error: true
       env:
         AMQP_PORT: ${{ job.services.rabbitmq.ports[5672] }}
+        JAVA_OPTS: "-Djava.net.preferIPv4Stack=true"
     - run: bundle exec ruby test/amqp/high_level_test.rb --verbose
       continue-on-error: true
       env:
         AMQP_PORT: ${{ job.services.rabbitmq.ports[5672] }}
+        JAVA_OPTS: "-Djava.net.preferIPv4Stack=true"
     - run: bundle exec ruby test/amqp/properties_test.rb --verbose
       continue-on-error: true
       env:
         AMQP_PORT: ${{ job.services.rabbitmq.ports[5672] }}
+        JAVA_OPTS: "-Djava.net.preferIPv4Stack=true"
 
   # macos:
   #   runs-on: macos-latest
