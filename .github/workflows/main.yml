@@ -43,7 +43,7 @@ jobs:
       env:
         AMQP_PORT: ${{ job.services.rabbitmq.ports[5672] }}
         JAVA_OPTS: "-Djava.net.preferIPv4Stack=true"
-    - run: ruby test/amqp/client_test.rb --verbose
+    - run: ruby test/amqp/client_test.rb --verbose --exclude /test_it_can_ack_a_lot_of_msgs$/
       timeout-minutes: 3
       continue-on-error: true
       env:
