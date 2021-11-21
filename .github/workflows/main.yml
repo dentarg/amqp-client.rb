@@ -15,6 +15,16 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -y rabbitmq-server
     - name: Stop RabbitMQ
       run: sudo systemctl stop rabbitmq-server
+
+    - name: Install mkcert
+      run: brew install mkcert
+    - name: Create local CA
+      run: sudo CAROOT=/etc/rabbitmq ./mkcert/mkcert -install
+    - name: Create certificate
+      run: |
+        sudo ./mkcert/mkcert -key-file /etc/rabbitmq/localhost-key.pem -cert-file /etc/rabbitmq/localhost.pem localhost
+        sudo chmod +r /etc/rabbitmq/localhost-key.pem
+
     - name: Create RabbitMQ config
       run: |
         sudo tee /etc/rabbitmq/rabbitmq.conf <<'EOF'
@@ -27,14 +37,6 @@ jobs:
       run: sudo systemctl start rabbitmq-server
     - name: Verify RabbitMQ started correctly
       run: while true; do sudo rabbitmq-diagnostics status 2>/dev/null && break; echo -n .; sleep 2; done
-    - name: Install mkcert
-      run: brew install mkcert
-    - name: Create local CA
-      run: sudo CAROOT=/etc/rabbitmq ./mkcert/mkcert -install
-    - name: Create certificate
-      run: |
-        sudo ./mkcert/mkcert -key-file /etc/rabbitmq/localhost-key.pem -cert-file /etc/rabbitmq/localhost.pem localhost
-        sudo chmod +r /etc/rabbitmq/localhost-key.pem
 
     - uses: actions/checkout@v2
     - name: Set up Ruby
