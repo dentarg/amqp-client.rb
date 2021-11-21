@@ -19,10 +19,10 @@ jobs:
     - name: Install mkcert
       run: brew install mkcert
     - name: Create local CA
-      run: sudo CAROOT=/etc/rabbitmq mkcert -install
+      run: sudo CAROOT=/etc/rabbitmq $(brew --prefix)/bin/mkcert -install
     - name: Create certificate
       run: |
-        sudo mkcert -key-file /etc/rabbitmq/localhost-key.pem -cert-file /etc/rabbitmq/localhost.pem localhost
+        sudo $(brew --prefix)/bin/mkcert -key-file /etc/rabbitmq/localhost-key.pem -cert-file /etc/rabbitmq/localhost.pem localhost
         sudo chmod +r /etc/rabbitmq/localhost-key.pem
 
     - name: Create RabbitMQ config
