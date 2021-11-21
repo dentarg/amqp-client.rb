@@ -8,7 +8,15 @@ jobs:
     timeout-minutes: 5
     services:
       rabbitmq:
+        # WARNING: As of RabbitMQ 3.9, all of the docker-specific variables
+        # listed below are deprecated and no longer used -- https://hub.docker.com/_/rabbitmq/
         image: rabbitmq:3.8
+        volumes:
+          - "${{ github.workspace }}:/certs"
+        env:
+          RABBITMQ_SSL_CACERTFILE: "/certs/rootCA.pem"
+          RABBITMQ_SSL_CERTFILE: "/certs/localhost.pem"
+          RABBITMQ_SSL_KEYFILE: "/certs/localhost-key.pem"
         ports:
         - 5672/tcp
         # needed because the rabbitmq container does not provide a healthcheck
@@ -22,6 +30,22 @@ jobs:
       matrix:
         ruby: ['3.0']
     steps:
+    - name: Install Go
+      run: apt-get install -y golang-go
+    - uses: actions/checkout@v2
+      repository: FiloSottile/mkcert
+      fetch-depth: 0 # need tag history
+    - name: Build mkcert
+      run: go build -ldflags "-X main.Version=$(git describe --tags)"
+      working-directory: mkcert
+    - name: Create local CA
+      run: ./mkcert/mkcert -install
+      env:
+        CAROOT: "${{ github.workspace }}"
+    - name: Create certificate
+      run: ./mkcert/mkcert -install
+      env:
+        CAROOT: "${{ github.workspace }}"
     - uses: actions/checkout@v2
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
