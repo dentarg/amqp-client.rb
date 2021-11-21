@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: ['3.0']
+        ruby: ['3.0', 'jruby', 'truffleruby']
     steps:
     - name: Install RabbitMQ
       run: sudo apt-get update && sudo apt-get install -y rabbitmq-server
@@ -46,4 +46,5 @@ jobs:
         ruby-version: ${{ matrix.ruby }}
     - name: Run TLS tests
       run: bundle exec rake
-
+      env:
+        TESTOPTS: --name=/_tls$/
